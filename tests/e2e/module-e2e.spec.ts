@@ -244,6 +244,15 @@ describe('EventEmitterModule - e2e', () => {
     ).rejects.toThrow('This is a test error');
   });
 
+  it('should throw when an unexpected error occurs from durable request scoped and suppressErrors is false', async () => {
+    await app.init();
+
+    const eventEmitter = app.get(EventEmitter2);
+    expect(
+      eventEmitter.emitAsync('error-throwing.durable-request-scoped'),
+    ).rejects.toThrow('This is a test error');
+  });
+
   it('should be able to wait until the event emitter is ready', async () => {
     const eventsConsumerRef = app.get(EventsControllerConsumer);
     await app.init();
@@ -253,7 +262,7 @@ describe('EventEmitterModule - e2e', () => {
     expect(eventsConsumerRef.eventPayload).toEqual(TEST_EVENT_PAYLOAD);
   });
 
-    it('should load durable provider once for different event emissions', async () => {
+  it('should load durable provider once for different event emissions', async () => {
     await app.init();
     const eventEmitter = app.get(EventEmitter2);
     const [durableInstance] = await eventEmitter.emitAsync('durable');
